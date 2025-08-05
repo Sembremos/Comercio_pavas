@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 # --- Estilos CSS para el título del expander ---
-# Esto inyecta código CSS para cambiar el color, negrita y tamaño del título de cada expander.
+# Este bloque de código CSS se aplica globalmente para estilizar todos los expanders.
 st.markdown("""
 <style>
 .streamlit-expanderHeader p {
