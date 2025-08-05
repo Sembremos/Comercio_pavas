@@ -54,7 +54,7 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
 st.markdown("**<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>**", unsafe_allow_html=True)
-with st.expander("Caracterización del Comercio"): # Título vacío o un espacio
+with st.expander("**<h3 style='color: #30a906;'>Caracterización del Comercio</h3>"): # Título vacío o un espacio
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
