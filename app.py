@@ -53,9 +53,8 @@ opciones_calificacion_respuesta = [
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
-with st.expander(
-    "**<h3 style='color: #2E86C1;'>Sección 1: Caracterización del Comercio</h3>**" # Opcional: para que la sección aparezca expandida por defecto
-    ):
+st.markdown("**<h3 style='color: #2E86C1;'>Sección 1: Caracterización del Comercio</h3>**", unsafe_allow_html=True)
+with st.expander(""): # Título vacío o un espacio
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -64,11 +63,7 @@ with st.expander(
 
     ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
-Detalles de la personalización
-
-    ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
-    maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
-
+    
 # --- Sección 2: Experiencia Directa con Delitos (Desplegable) ---
 with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)"):
     st.markdown("---")
