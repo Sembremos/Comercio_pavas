@@ -71,9 +71,10 @@ def save_to_gsheet(data):
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
         client = gspread.authorize(creds.create_delegated(scope))
         
-        # Abre la hoja de cálculo por su ID (el que proporcionaste)
+        # Abre la hoja de cálculo por su ID y nombre de la hoja
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
-        sheet = client.open_by_key(sheet_id). worksheet(Hoja 1) # 'sheet1' es la primera hoja.
+        # CAMBIO AQUÍ: Usa 'worksheet' con el nombre de tu hoja en español
+        sheet = client.open_by_key(sheet_id).worksheet("Hoja 1")
         
         # Agrega una nueva fila con los datos de la encuesta
         sheet.append_row(data)
