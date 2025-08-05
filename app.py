@@ -55,13 +55,17 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
 with st.expander(
     "**<h3 style='color: #2E86C1;'>Sección 1: Caracterización del Comercio</h3>**",
-    expanded=True
-    ):
+    expanded=True # Opcional: para que la sección aparezca expandida por defecto
+):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
     if tipo_negocio == "Otro":
         otro_negocio = st.text_input("Por favor, especifique el tipo de negocio:")
+
+    ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
+    maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
+Detalles de la personalización
 
     ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
