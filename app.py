@@ -10,6 +10,18 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- Estilos CSS para el título del expander ---
+# Esto inyecta código CSS para cambiar el color, negrita y tamaño del título de cada expander.
+st.markdown("""
+<style>
+.streamlit-expanderHeader p {
+    font-size: 20px;
+    color: #30a906;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # --- Encabezado de imagen y texto justificado ---
 try:
     st.image("logo_pavas.png", width=300)
@@ -53,9 +65,7 @@ opciones_calificacion_respuesta = [
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
-# Título con formato usando st.markdown()
-st.markdown("<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>", unsafe_allow_html=True)
-with st.expander(""):
+with st.expander("Sección 1: Caracterización del Comercio", expanded=True):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -66,12 +76,10 @@ with st.expander(""):
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
 
 # --- Sección 2: Experiencia Directa con Delitos (Desplegable) ---
-st.markdown("<h4 style='color: #30a906;'>Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)</h4>", unsafe_allow_html=True)
-with st.expander(""):
+with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)"):
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
-    # Lógica condicional para preguntas 5 y 6
     if victima_asalto == "Sí":
         st.markdown("5. Si fue víctima de un asalto, por favor describa el más reciente:")
         movilizacion = st.radio("  - ¿Cómo se movilizaban los delincuentes?", options=opciones_movilizacion, horizontal=True)
@@ -92,10 +100,8 @@ with st.expander(""):
         if denuncia == "No":
             razon_no_denuncia = st.text_area("  - ¿Por qué no presentó la denuncia?")
             
-    # Pregunta 7
     robo_vehiculos = st.radio("7. ¿Han robado vehículos o artículos DENTRO de vehículos (tacha) de clientes o empleados en el área cercana a su negocio?", options=opciones_si_no, horizontal=True)
     
-    # Lógica condicional para preguntas 8 y 9
     tipo_robo_vehiculo, facilita_robos = None, None
     if robo_vehiculos == "Sí":
         st.markdown("8. Sobre el robo a vehículos:")
@@ -106,8 +112,7 @@ with st.expander(""):
 
 
 # --- Sección 3: Percepción y Relación con Fuerza Pública (Desplegable) ---
-st.markdown("<h4 style='color: #30a906;'>Sección 3: Percepción y Relación con Fuerza Pública</h4>", unsafe_allow_html=True)
-with st.expander(""):
+with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
     st.markdown("---")
     seguridad_local = st.radio("10. En una escala de 1 a 5, ¿qué tan seguro se siente en su local?", options=list(opciones_escala_seguridad.keys()), format_func=lambda x: opciones_escala_seguridad[x], horizontal=True)
     frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True)
@@ -119,8 +124,7 @@ with st.expander(""):
 
 
 # --- Sección 4: Medidas de Prevención y Sugerencias (Desplegable) ---
-st.markdown("<h4 style='color: #30a906;'>Sección 4: Medidas de Prevención y Sugerencias</h4>", unsafe_allow_html=True)
-with st.expander(""):
+with st.expander("Sección 4: Medidas de Prevención y Sugerencias"):
     st.markdown("---")
     medidas_seguridad = st.text_area("14. ¿Qué medidas de seguridad ha implementado usted en su negocio? (Ej: Alarmas, cámaras, rejas, etc.)")
     sugerencia_jefe_policia = st.text_area("15. Si usted pudiera darle una orden directa al jefe de la policía de Pavas, ¿cuál sería la acción MÁS URGENTE que le pediría para mejorar la seguridad de su negocio y la de sus clientes?")
