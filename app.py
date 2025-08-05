@@ -12,7 +12,7 @@ st.set_page_config(
 
 # --- Encabezado de imagen y texto justificado ---
 try:
-    st.image("logo_pavas.png", width=300)
+    st.image("logo_pavas.png", width=700)
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
 
@@ -20,7 +20,7 @@ st.title("🛡️ Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown(
     """
     <div style="text-align: justify;">
-    **Objetivo:** Recopilar información cualitativa sobre las dinámicas de asaltos y robos en las zonas comerciales de Pavas. Los datos son anónimos, confidenciales y serán utilizados exclusivamente para proponer mejoras en las estrategias de seguridad de la Fuerza Pública.
+    El objetivo de esta encuesta es recopilar información cualitativa sobre las dinámicas de asaltos y robos en las zonas comerciales de Pavas. Los datos son anónimos, confidenciales y serán utilizados exclusivamente para proponer mejoras en las estrategias de seguridad de la Fuerza Pública.
     </div>
     """,
     unsafe_allow_html=True
@@ -53,8 +53,8 @@ opciones_calificacion_respuesta = [
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio ---
-st.markdown("<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>", unsafe_allow_html=True)
-with st.expander("", expanded=True):
+st.markdown("<h4 style='color: #30a906;'>Sección 1:</h4>", unsafe_allow_html=True)
+with st.expander("Caracterizacion del Comercio"):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -65,8 +65,8 @@ with st.expander("", expanded=True):
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
 
 # --- Sección 2: Experiencia Directa con Delitos (Últimos 12 meses) ---
-st.markdown("<h4 style='color: #30a906;'>Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)</h4>", unsafe_allow_html=True)
-with st.expander(""):
+st.markdown("<h4 style='color: #30a906;'>Sección 2:</h4>", unsafe_allow_html=True)
+with st.expander("Experiencia Directa con Delitos (Últimos 12 meses)"):
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
@@ -102,8 +102,8 @@ with st.expander(""):
 
 
 # --- Sección 3: Percepción y Relación con Fuerza Pública ---
-st.markdown("<h4 style='color: #30a906;'>Sección 3: Percepción y Relación con Fuerza Pública</h4>", unsafe_allow_html=True)
-with st.expander(""):
+st.markdown("<h4 style='color: #30a906;'>Sección 3:</h4>", unsafe_allow_html=True)
+with st.expander(" Percepción y Relación con Fuerza Pública"):
     st.markdown("---")
     seguridad_local = st.radio("10. En una escala de 1 a 5, ¿qué tan seguro se siente en su local?", options=list(opciones_escala_seguridad.keys()), format_func=lambda x: opciones_escala_seguridad[x], horizontal=True)
     frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True)
@@ -115,8 +115,8 @@ with st.expander(""):
 
 
 # --- Sección 4: Medidas de Prevención y Sugerencias ---
-st.markdown("<h4 style='color: #30a906;'>Sección 4: Medidas de Prevención y Sugerencias</h4>", unsafe_allow_html=True)
-with st.expander(""):
+st.markdown("<h4 style='color: #30a906;'>Sección 4:</h4>", unsafe_allow_html=True)
+with st.expander("Medidas de Prevención y Sugerencias"):
     st.markdown("---")
     medidas_seguridad = st.text_area("14. ¿Qué medidas de seguridad ha implementado usted en su negocio? (Ej: Alarmas, cámaras, rejas, etc.)")
     sugerencia_jefe_policia = st.text_area("15. Si usted pudiera darle una orden directa al jefe de la policía de Pavas, ¿cuál sería la acción MÁS URGENTE que le pediría para mejorar la seguridad de su negocio y la de sus clientes?")
