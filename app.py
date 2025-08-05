@@ -73,7 +73,7 @@ def save_to_gsheet(data):
         
         # Abre la hoja de cálculo por su ID y nombre de la hoja
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
-        # CAMBIO AQUÍ: Usa 'worksheet' con el nombre de tu hoja en español
+        # CORRECCIÓN: Usa el nombre exacto de tu hoja en Google Sheets
         sheet = client.open_by_key(sheet_id).worksheet("Hoja 1")
         
         # Agrega una nueva fila con los datos de la encuesta
