@@ -15,7 +15,7 @@ st.image("logo_pavas.png", width=700)
 # --- Título y descripción de la encuesta ---
 st.title("Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown("""
-**Objetivo:** Recopilar información cualitativa sobre las dinámicas de asaltos y robos en las zonas comerciales de Pavas. Los datos son anónimos, confidenciales y serán utilizados exclusivamente para proponer mejoras en las estrategias de seguridad de la Fuerza Pública.
+**El Objetivo de esta encuesta es recopilar información cualitativa sobre las dinámicas de asaltos y robos en las zonas comerciales de Pavas. Los datos son anónimos, confidenciales y serán utilizados exclusivamente para proponer mejoras en las estrategias de seguridad de la Fuerza Pública.
 """)
 st.divider()
 
