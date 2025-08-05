@@ -12,11 +12,11 @@ st.set_page_config(
 
 # --- Encabezado de imagen y texto justificado ---
 try:
-    st.image("logo_pavas.png", width=700)
+    st.image("logo_pavas.png", width=300)
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
 
-st.title("Encuesta sobre Seguridad para Comercios en Pavas")
+st.title("🛡️ Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown(
     """
     <div style="text-align: justify;">
@@ -53,8 +53,10 @@ opciones_calificacion_respuesta = [
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
-st.markdown("**<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>**", unsafe_allow_html=True)
-with st.expander("**<h3 style='color: #30a906;'>Caracterización del Comercio</h3>**"): # Título vacío o un espacio
+with st.expander(
+    "**<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>**",
+    expanded=True
+):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -63,9 +65,11 @@ with st.expander("**<h3 style='color: #30a906;'>Caracterización del Comercio</h
 
     ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
-    
+
 # --- Sección 2: Experiencia Directa con Delitos (Desplegable) ---
-with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)"):
+with st.expander(
+    "**<h4 style='color: #30a906;'>Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)</h4>**"
+):
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
@@ -94,18 +98,19 @@ with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses
     robo_vehiculos = st.radio("7. ¿Han robado vehículos o artículos DENTRO de vehículos (tacha) de clientes o empleados en el área cercana a su negocio?", options=opciones_si_no, horizontal=True)
     
     # Lógica condicional para preguntas 8 y 9
+    tipo_robo_vehiculo, facilita_robos = None, None
     if robo_vehiculos == "Sí":
         st.markdown("8. Sobre el robo a vehículos:")
         tipo_robo_vehiculo = st.radio("  - ¿Fue principalmente robo de todo el vehículo o tacha?", options=opciones_tipo_robo_vehiculo, horizontal=True)
         facilita_robos = st.text_area("  - ¿Qué cree que facilita estos robos en la zona? (Ej: Poca luz, calles solas, etc.)")
-    else:
-        tipo_robo_vehiculo, facilita_robos = None, None
 
     problematica_extra = st.text_area("9. ¿Existe alguna otra problemática o delito que esté afectando a su comercio o clientes?")
 
 
 # --- Sección 3: Percepción y Relación con Fuerza Pública (Desplegable) ---
-with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
+with st.expander(
+    "**<h4 style='color: #30a906;'>Sección 3: Percepción y Relación con Fuerza Pública</h4>**"
+):
     st.markdown("---")
     seguridad_local = st.radio("10. En una escala de 1 a 5, ¿qué tan seguro se siente en su local?", options=list(opciones_escala_seguridad.keys()), format_func=lambda x: opciones_escala_seguridad[x], horizontal=True)
     frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True)
@@ -117,7 +122,9 @@ with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
 
 
 # --- Sección 4: Medidas de Prevención y Sugerencias (Desplegable) ---
-with st.expander("Sección 4: Medidas de Prevención y Sugerencias"):
+with st.expander(
+    "**<h4 style='color: #30a906;'>Sección 4: Medidas de Prevención y Sugerencias</h4>**"
+):
     st.markdown("---")
     medidas_seguridad = st.text_area("14. ¿Qué medidas de seguridad ha implementado usted en su negocio? (Ej: Alarmas, cámaras, rejas, etc.)")
     sugerencia_jefe_policia = st.text_area("15. Si usted pudiera darle una orden directa al jefe de la policía de Pavas, ¿cuál sería la acción MÁS URGENTE que le pediría para mejorar la seguridad de su negocio y la de sus clientes?")
@@ -133,23 +140,23 @@ if st.button("Enviar Encuesta"):
         "ubicacion": ubicacion,
         "maneja_efectivo": maneja_efectivo,
         "victima_asalto": victima_asalto,
-        "movilizacion_delincuentes": movilizacion if victima_asalto == "Sí" else None,
-        "uso_armas": uso_armas if victima_asalto == "Sí" else None,
-        "tipo_arma_especificado": tipo_arma if victima_asalto == "Sí" and uso_armas == "Sí" else None,
-        "hora_asalto": hora_asalto if victima_asalto == "Sí" else None,
-        "principales_robado": principales_robado if victima_asalto == "Sí" else None,
-        "otras_pertenencias_especificadas": otras_pertenencias if victima_asalto == "Sí" and principales_robado == "Otras pertenencias de clientes" else None,
-        "denuncia_presentada": denuncia if victima_asalto == "Sí" else None,
-        "razon_no_denuncia": razon_no_denuncia if victima_asalto == "Sí" and denuncia == "No" else None,
+        "movilizacion_delincuentes": movilizacion if 'movilizacion' in locals() else None,
+        "uso_armas": uso_armas if 'uso_armas' in locals() else None,
+        "tipo_arma_especificado": tipo_arma if 'tipo_arma' in locals() else None,
+        "hora_asalto": hora_asalto if 'hora_asalto' in locals() else None,
+        "principales_robado": principales_robado if 'principales_robado' in locals() else None,
+        "otras_pertenencias_especificadas": otras_pertenencias if 'otras_pertenencias' in locals() else None,
+        "denuncia_presentada": denuncia if 'denuncia' in locals() else None,
+        "razon_no_denuncia": razon_no_denuncia if 'razon_no_denuncia' in locals() else None,
         "robo_vehiculos_cerca": robo_vehiculos,
-        "tipo_robo_vehiculo": tipo_robo_vehiculo,
-        "facilita_robos": facilita_robos,
+        "tipo_robo_vehiculo": tipo_robo_vehiculo if 'tipo_robo_vehiculo' in locals() else None,
+        "facilita_robos": facilita_robos if 'facilita_robos' in locals() else None,
         "problematica_extra": problematica_extra,
         "sentimiento_seguridad": seguridad_local,
         "frecuencia_patrullas": frecuencia_patrullas,
         "tiempo_respuesta": tiempo_respuesta,
         "presencia_previene": presencia_previene,
-        "razon_parcial": razon_parcial if presencia_previene == "Parcialmente" else None,
+        "razon_parcial": razon_parcial if 'razon_parcial' in locals() else None,
         "medidas_seguridad": medidas_seguridad,
         "sugerencia_jefe_policia": sugerencia_jefe_policia,
     }
@@ -157,7 +164,6 @@ if st.button("Enviar Encuesta"):
     try:
         df = pd.DataFrame([datos_encuesta])
         
-        # Guardar en un archivo CSV, creando el encabezado si el archivo no existe
         file_path = "datos_encuesta.csv"
         if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
             df.to_csv(file_path, index=False, encoding="utf-8-sig")
