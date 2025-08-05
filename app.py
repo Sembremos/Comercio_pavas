@@ -10,18 +10,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Estilos CSS para el título del expander ---
-# Este bloque de código CSS se aplica globalmente para estilizar todos los expanders.
-st.markdown("""
-<style>
-.streamlit-expanderHeader p {
-    font-size: 20px;
-    color: #30a906;
-    font-weight: bold;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # --- Encabezado de imagen y texto justificado ---
 try:
     st.image("logo_pavas.png", width=300)
@@ -64,8 +52,9 @@ opciones_calificacion_respuesta = [
 ]
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
-# --- Sección 1: Caracterización del Comercio (Desplegable) ---
-with st.expander("Sección 1: Caracterización del Comercio", expanded=True):
+# --- Sección 1: Caracterización del Comercio ---
+st.markdown("<h4 style='color: #30a906;'>Sección 1: Caracterización del Comercio</h4>", unsafe_allow_html=True)
+with st.expander("", expanded=True):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -75,8 +64,9 @@ with st.expander("Sección 1: Caracterización del Comercio", expanded=True):
     ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
 
-# --- Sección 2: Experiencia Directa con Delitos (Desplegable) ---
-with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)"):
+# --- Sección 2: Experiencia Directa con Delitos (Últimos 12 meses) ---
+st.markdown("<h4 style='color: #30a906;'>Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)</h4>", unsafe_allow_html=True)
+with st.expander(""):
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
@@ -111,8 +101,9 @@ with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses
     problematica_extra = st.text_area("9. ¿Existe alguna otra problemática o delito que esté afectando a su comercio o clientes?")
 
 
-# --- Sección 3: Percepción y Relación con Fuerza Pública (Desplegable) ---
-with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
+# --- Sección 3: Percepción y Relación con Fuerza Pública ---
+st.markdown("<h4 style='color: #30a906;'>Sección 3: Percepción y Relación con Fuerza Pública</h4>", unsafe_allow_html=True)
+with st.expander(""):
     st.markdown("---")
     seguridad_local = st.radio("10. En una escala de 1 a 5, ¿qué tan seguro se siente en su local?", options=list(opciones_escala_seguridad.keys()), format_func=lambda x: opciones_escala_seguridad[x], horizontal=True)
     frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True)
@@ -123,8 +114,9 @@ with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
         razon_parcial = st.text_area("  - ¿Por qué?")
 
 
-# --- Sección 4: Medidas de Prevención y Sugerencias (Desplegable) ---
-with st.expander("Sección 4: Medidas de Prevención y Sugerencias"):
+# --- Sección 4: Medidas de Prevención y Sugerencias ---
+st.markdown("<h4 style='color: #30a906;'>Sección 4: Medidas de Prevención y Sugerencias</h4>", unsafe_allow_html=True)
+with st.expander(""):
     st.markdown("---")
     medidas_seguridad = st.text_area("14. ¿Qué medidas de seguridad ha implementado usted en su negocio? (Ej: Alarmas, cámaras, rejas, etc.)")
     sugerencia_jefe_policia = st.text_area("15. Si usted pudiera darle una orden directa al jefe de la policía de Pavas, ¿cuál sería la acción MÁS URGENTE que le pediría para mejorar la seguridad de su negocio y la de sus clientes?")
@@ -139,7 +131,7 @@ if st.button("Enviar Encuesta"):
         "otro_negocio_especificado": otro_negocio,
         "ubicacion": ubicacion,
         "maneja_efectivo": maneja_efectivo,
-        "victima_asalto": victima_asalto,
+        "victima_asalto": locals().get('victima_asalto'),
         "movilizacion_delincuentes": locals().get('movilizacion'),
         "uso_armas": locals().get('uso_armas'),
         "tipo_arma_especificado": locals().get('tipo_arma'),
@@ -148,17 +140,17 @@ if st.button("Enviar Encuesta"):
         "otras_pertenencias_especificadas": locals().get('otras_pertenencias'),
         "denuncia_presentada": locals().get('denuncia'),
         "razon_no_denuncia": locals().get('razon_no_denuncia'),
-        "robo_vehiculos_cerca": robo_vehiculos,
+        "robo_vehiculos_cerca": locals().get('robo_vehiculos'),
         "tipo_robo_vehiculo": locals().get('tipo_robo_vehiculo'),
         "facilita_robos": locals().get('facilita_robos'),
-        "problematica_extra": problematica_extra,
-        "sentimiento_seguridad": seguridad_local,
-        "frecuencia_patrullas": frecuencia_patrullas,
-        "tiempo_respuesta": tiempo_respuesta,
-        "presencia_previene": presencia_previene,
+        "problematica_extra": locals().get('problematica_extra'),
+        "sentimiento_seguridad": locals().get('seguridad_local'),
+        "frecuencia_patrullas": locals().get('frecuencia_patrullas'),
+        "tiempo_respuesta": locals().get('tiempo_respuesta'),
+        "presencia_previene": locals().get('presencia_previene'),
         "razon_parcial": locals().get('razon_parcial'),
-        "medidas_seguridad": medidas_seguridad,
-        "sugerencia_jefe_policia": sugerencia_jefe_policia,
+        "medidas_seguridad": locals().get('medidas_seguridad'),
+        "sugerencia_jefe_policia": locals().get('sugerencia_jefe_policia'),
     }
     
     try:
