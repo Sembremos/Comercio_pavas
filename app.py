@@ -10,7 +10,7 @@ st.set_page_config(
 )
 
 # --- Encabezado de imagen ---
-st.image("logo_pavas.png", width=300)
+st.image("logo_pavas.png", width=500)
 
 # --- Título y descripción de la encuesta ---
 st.title("Encuesta sobre Seguridad para Comercios en Pavas")
