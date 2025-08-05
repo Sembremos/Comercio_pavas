@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import os
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 # --- Configuración de la página ---
 st.set_page_config(
@@ -10,13 +12,25 @@ st.set_page_config(
     layout="wide"
 )
 
+# --- Estilos CSS personalizados para el título del expander ---
+st.markdown("""
+<style>
+/* Estilo para el título del expander */
+div.st-emotion-cache-1ft84e1 p {
+    font-size: 20px;
+    color: #30a906;
+    font-weight: bold;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # --- Encabezado de imagen y texto justificado ---
 try:
     st.image("logo_pavas.png", width=700)
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
 
-st.title("Encuesta sobre Seguridad para Comercios en Pavas")
+st.title("🛡️ Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown(
     """
     <div style="text-align: justify;">
@@ -28,10 +42,8 @@ st.markdown(
 st.divider()
 
 # --- Diccionarios de opciones ---
-opciones_tipo_negocio = [
-    "Pulpería/Minisúper", "Farmacia", "Restaurante/Soda",
-    "Salón de Belleza/Barbería", "Taller mecánico", "Tienda", "Otro"
-]
+opciones_tipo_negocio = ["Pulpería/Minisúper", "Farmacia", "Restaurante/Soda",
+                        "Salón de Belleza/Barbería", "Taller mecánico", "Tienda", "Otro"]
 opciones_ubicacion = ["Circuito 1", "Circuito 2", "Circuito 3", "Circuito 4"]
 opciones_si_no_a_veces = ["Sí", "No", "A veces"]
 opciones_si_no = ["Sí", "No"]
@@ -42,19 +54,34 @@ opciones_escala_seguridad = {
     1: "1 - Muy Inseguro", 2: "2 - Inseguro", 3: "3 - Neutral",
     4: "4 - Seguro", 5: "5 - Muy Seguro"
 }
-opciones_frecuencia_patrullas = [
-    "Varias veces al día", "Una vez al día",
-    "Algunas veces por semana", "Casi nunca"
-]
-opciones_calificacion_respuesta = [
-    "Excelente", "Bueno", "Regular", "Malo",
-    "Nunca han llegado", "No he necesitado de la Fuerza Pública"
-]
+opciones_frecuencia_patrullas = ["Varias veces al día", "Una vez al día",
+                                "Algunas veces por semana", "Casi nunca"]
+opciones_calificacion_respuesta = ["Excelente", "Bueno", "Regular", "Malo",
+                                   "Nunca han llegado", "No he necesitado de la Fuerza Pública"]
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
-# --- Sección 1: Caracterización del Comercio ---
-st.markdown("<h4 style='color: #30a906;'>Sección 1:</h4>", unsafe_allow_html=True)
-with st.expander("Caracterizacion del Comercio"):
+# --- Función para guardar los datos en Google Sheets de forma segura ---
+def save_to_gsheet(data):
+    try:
+        # Conéctate con Google Sheets usando los secretos de Streamlit
+        creds_json = st.secrets["gcp_service_account"]
+        creds = ServiceAccountCredentials.from_json(creds_json, ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
+        client = gspread.authorize(creds)
+        
+        # Abre la hoja de cálculo por su ID (el que proporcionaste)
+        sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
+        sheet = client.open_by_key(sheet_id).sheet1 # 'sheet1' es la primera hoja.
+        
+        # Agrega una nueva fila con los datos de la encuesta
+        sheet.append_row(data)
+        
+        return True
+    except Exception as e:
+        st.error(f"Ocurrió un error al guardar en Google Sheets: {e}")
+        return False
+
+# --- Sección 1: Caracterización del Comercio (Desplegable) ---
+with st.expander("Sección 1: Caracterización del Comercio", expanded=True):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
@@ -64,9 +91,8 @@ with st.expander("Caracterizacion del Comercio"):
     ubicacion = st.radio("2. Ubicación general dentro de Pavas:", options=opciones_ubicacion, horizontal=True)
     maneja_efectivo = st.radio("3. ¿Su negocio maneja montos significativos de efectivo de forma visible?", options=opciones_si_no_a_veces, horizontal=True)
 
-# --- Sección 2: Experiencia Directa con Delitos (Últimos 12 meses) ---
-st.markdown("<h4 style='color: #30a906;'>Sección 2:</h4>", unsafe_allow_html=True)
-with st.expander("Experiencia Directa con Delitos (Últimos 12 meses)"):
+# --- Sección 2: Experiencia Directa con Delitos (Desplegable) ---
+with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses)"):
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
@@ -101,9 +127,8 @@ with st.expander("Experiencia Directa con Delitos (Últimos 12 meses)"):
     problematica_extra = st.text_area("9. ¿Existe alguna otra problemática o delito que esté afectando a su comercio o clientes?")
 
 
-# --- Sección 3: Percepción y Relación con Fuerza Pública ---
-st.markdown("<h4 style='color: #30a906;'>Sección 3:</h4>", unsafe_allow_html=True)
-with st.expander(" Percepción y Relación con Fuerza Pública"):
+# --- Sección 3: Percepción y Relación con Fuerza Pública (Desplegable) ---
+with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
     st.markdown("---")
     seguridad_local = st.radio("10. En una escala de 1 a 5, ¿qué tan seguro se siente en su local?", options=list(opciones_escala_seguridad.keys()), format_func=lambda x: opciones_escala_seguridad[x], horizontal=True)
     frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True)
@@ -114,54 +139,45 @@ with st.expander(" Percepción y Relación con Fuerza Pública"):
         razon_parcial = st.text_area("  - ¿Por qué?")
 
 
-# --- Sección 4: Medidas de Prevención y Sugerencias ---
-st.markdown("<h4 style='color: #30a906;'>Sección 4:</h4>", unsafe_allow_html=True)
-with st.expander("Medidas de Prevención y Sugerencias"):
+# --- Sección 4: Medidas de Prevención y Sugerencias (Desplegable) ---
+with st.expander("Sección 4: Medidas de Prevención y Sugerencias"):
     st.markdown("---")
     medidas_seguridad = st.text_area("14. ¿Qué medidas de seguridad ha implementado usted en su negocio? (Ej: Alarmas, cámaras, rejas, etc.)")
     sugerencia_jefe_policia = st.text_area("15. Si usted pudiera darle una orden directa al jefe de la policía de Pavas, ¿cuál sería la acción MÁS URGENTE que le pediría para mejorar la seguridad de su negocio y la de sus clientes?")
 
 st.divider()
 
-# --- Botón de Envío y guardado de datos ---
+# --- Botón de Envío y guardado de datos en Google Sheets ---
 if st.button("Enviar Encuesta"):
-    datos_encuesta = {
-        "timestamp": datetime.now(),
-        "tipo_negocio": tipo_negocio,
-        "otro_negocio_especificado": otro_negocio,
-        "ubicacion": ubicacion,
-        "maneja_efectivo": maneja_efectivo,
-        "victima_asalto": locals().get('victima_asalto'),
-        "movilizacion_delincuentes": locals().get('movilizacion'),
-        "uso_armas": locals().get('uso_armas'),
-        "tipo_arma_especificado": locals().get('tipo_arma'),
-        "hora_asalto": locals().get('hora_asalto'),
-        "principales_robado": locals().get('principales_robado'),
-        "otras_pertenencias_especificadas": locals().get('otras_pertenencias'),
-        "denuncia_presentada": locals().get('denuncia'),
-        "razon_no_denuncia": locals().get('razon_no_denuncia'),
-        "robo_vehiculos_cerca": locals().get('robo_vehiculos'),
-        "tipo_robo_vehiculo": locals().get('tipo_robo_vehiculo'),
-        "facilita_robos": locals().get('facilita_robos'),
-        "problematica_extra": locals().get('problematica_extra'),
-        "sentimiento_seguridad": locals().get('seguridad_local'),
-        "frecuencia_patrullas": locals().get('frecuencia_patrullas'),
-        "tiempo_respuesta": locals().get('tiempo_respuesta'),
-        "presencia_previene": locals().get('presencia_previene'),
-        "razon_parcial": locals().get('razon_parcial'),
-        "medidas_seguridad": locals().get('medidas_seguridad'),
-        "sugerencia_jefe_policia": locals().get('sugerencia_jefe_policia'),
-    }
-    
-    try:
-        df = pd.DataFrame([datos_encuesta])
-        
-        file_path = "datos_encuesta.csv"
-        if not os.path.exists(file_path) or os.path.getsize(file_path) == 0:
-            df.to_csv(file_path, index=False, encoding="utf-8-sig")
-        else:
-            df.to_csv(file_path, mode="a", header=False, index=False, encoding="utf-8-sig")
+    # Recolecta los datos de los campos del formulario
+    datos_encuesta = [
+        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        tipo_negocio,
+        otro_negocio,
+        ubicacion,
+        maneja_efectivo,
+        locals().get('victima_asalto'),
+        locals().get('movilizacion'),
+        locals().get('uso_armas'),
+        locals().get('tipo_arma'),
+        locals().get('hora_asalto'),
+        locals().get('principales_robado'),
+        locals().get('otras_pertenencias'),
+        locals().get('denuncia'),
+        locals().get('razon_no_denuncia'),
+        locals().get('robo_vehiculos'),
+        locals().get('tipo_robo_vehiculo'),
+        locals().get('facilita_robos'),
+        locals().get('problematica_extra'),
+        locals().get('sentimiento_seguridad'),
+        locals().get('frecuencia_patrullas'),
+        locals().get('tiempo_respuesta'),
+        locals().get('presencia_previene'),
+        locals().get('razon_parcial'),
+        locals().get('medidas_seguridad'),
+        locals().get('sugerencia_jefe_policia'),
+    ]
 
-        st.success("🎉 ¡Gracias por completar la encuesta! Tus respuestas han sido enviadas.")
-    except Exception as e:
-        st.error(f"Ocurrió un error al guardar los datos: {e}")
+    # Guarda los datos en Google Sheets
+    if save_to_gsheet(datos_encuesta):
+        st.success("🎉 ¡Gracias por completar la encuesta! Tus respuestas han sido enviadas y guardadas en Google Sheets.")
