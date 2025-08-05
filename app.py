@@ -65,8 +65,11 @@ def save_to_gsheet(data):
     try:
         # Conéctate con Google Sheets usando los secretos de Streamlit
         creds_json = st.secrets["gcp_service_account"]
-        creds = ServiceAccountCredentials.from_json(creds_json, ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
-        client = gspread.authorize(creds)
+        creds = ServiceAccountCredentials.from_json(creds_json)
+        
+        # Define los permisos (scope) y autoriza el cliente de gspread con las credenciales
+        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+        client = gspread.authorize(creds.create_delegated(scope))
         
         # Abre la hoja de cálculo por su ID (el que proporcionaste)
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
@@ -96,6 +99,9 @@ with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses
     st.markdown("---")
     victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True)
     
+    # Inicializa las variables para evitar errores
+    movilizacion, uso_armas, tipo_arma, hora_asalto, principales_robado, otras_pertenencias, denuncia, razon_no_denuncia = [None] * 8
+    
     if victima_asalto == "Sí":
         st.markdown("5. Si fue víctima de un asalto, por favor describa el más reciente:")
         movilizacion = st.radio("  - ¿Cómo se movilizaban los delincuentes?", options=opciones_movilizacion, horizontal=True)
@@ -118,6 +124,7 @@ with st.expander("Sección 2: Experiencia Directa con Delitos (Últimos 12 meses
             
     robo_vehiculos = st.radio("7. ¿Han robado vehículos o artículos DENTRO de vehículos (tacha) de clientes o empleados en el área cercana a su negocio?", options=opciones_si_no, horizontal=True)
     
+    # Inicializa las variables para evitar errores
     tipo_robo_vehiculo, facilita_robos = None, None
     if robo_vehiculos == "Sí":
         st.markdown("8. Sobre el robo a vehículos:")
@@ -156,26 +163,26 @@ if st.button("Enviar Encuesta"):
         otro_negocio,
         ubicacion,
         maneja_efectivo,
-        locals().get('victima_asalto'),
-        locals().get('movilizacion'),
-        locals().get('uso_armas'),
-        locals().get('tipo_arma'),
-        locals().get('hora_asalto'),
-        locals().get('principales_robado'),
-        locals().get('otras_pertenencias'),
-        locals().get('denuncia'),
-        locals().get('razon_no_denuncia'),
-        locals().get('robo_vehiculos'),
-        locals().get('tipo_robo_vehiculo'),
-        locals().get('facilita_robos'),
-        locals().get('problematica_extra'),
-        locals().get('sentimiento_seguridad'),
-        locals().get('frecuencia_patrullas'),
-        locals().get('tiempo_respuesta'),
-        locals().get('presencia_previene'),
-        locals().get('razon_parcial'),
-        locals().get('medidas_seguridad'),
-        locals().get('sugerencia_jefe_policia'),
+        victima_asalto,
+        movilizacion,
+        uso_armas,
+        tipo_arma,
+        hora_asalto,
+        principales_robado,
+        otras_pertenencias,
+        denuncia,
+        razon_no_denuncia,
+        robo_vehiculos,
+        tipo_robo_vehiculo,
+        facilita_robos,
+        problematica_extra,
+        seguridad_local,
+        frecuencia_patrullas,
+        tiempo_respuesta,
+        presencia_previene,
+        razon_parcial,
+        medidas_seguridad,
+        sugerencia_jefe_policia,
     ]
 
     # Guarda los datos en Google Sheets
