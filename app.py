@@ -55,7 +55,7 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 st.header("Sección 1: Caracterización del Comercio")
 st.markdown("---")
 
-tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, vertical=True)
+tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
 if tipo_negocio == "Otro":
     otro_negocio = st.text_input("Por favor, especifique el tipo de negocio:")
 else:
