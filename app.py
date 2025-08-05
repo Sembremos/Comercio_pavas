@@ -12,11 +12,11 @@ st.set_page_config(
 
 # --- Encabezado de imagen y texto justificado ---
 try:
-    st.image("logo_pavas.png", width=300)
+    st.image("logo_pavas.png", width=700)
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
 
-st.title("🛡️ Encuesta sobre Seguridad para Comercios en Pavas")
+st.title("Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown(
     """
     <div style="text-align: justify;">
@@ -53,7 +53,10 @@ opciones_calificacion_respuesta = [
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Sección 1: Caracterización del Comercio (Desplegable) ---
-with st.expander("Sección 1: Caracterización del Comercio"):
+with st.expander(
+    "**<h3 style='color: #2E86C1; '>Sección 1: Caracterización del Comercio</h3>**",
+    expanded=true
+    ):
     st.markdown("---")
     tipo_negocio = st.radio("1. Tipo de negocio:", options=opciones_tipo_negocio, horizontal=True)
     otro_negocio = ""
