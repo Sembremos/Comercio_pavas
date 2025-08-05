@@ -73,7 +73,7 @@ def save_to_gsheet(data):
         
         # Abre la hoja de cálculo por su ID (el que proporcionaste)
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
-        sheet = client.open_by_key(sheet_id).sheet1 # 'sheet1' es la primera hoja.
+        sheet = client.open_by_key(sheet_id). worksheet(Hoja 1) # 'sheet1' es la primera hoja.
         
         # Agrega una nueva fila con los datos de la encuesta
         sheet.append_row(data)
