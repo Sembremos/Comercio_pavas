@@ -64,8 +64,10 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 # --- Función para guardar los datos en Google Sheets de forma segura ---
 def save_to_gsheet(data):
     try:
-        # Crea un objeto de credenciales a partir del JSON de secretos
-        creds = ServiceAccountCredentials.from_json(st.secrets["gcp_service_account"])
+        # CONVERSIÓN CRUCIAL: Lee el secreto como un string y lo convierte a JSON
+        creds_json_string = st.secrets["gcp_credentials"]
+        creds_json = json.loads(creds_json_string)
+        creds = ServiceAccountCredentials.from_json(creds_json)
         
         # Define los permisos (scope) y autoriza el cliente de gspread
         scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
