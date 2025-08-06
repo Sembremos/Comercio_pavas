@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import json
 
 # --- Configuración de la página ---
@@ -64,18 +63,16 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 # --- Función para guardar los datos en Google Sheets de forma segura ---
 def save_to_gsheet(data):
     try:
-        # CONVERSIÓN CRUCIAL: Lee el secreto como un string y lo convierte a JSON
-        creds_json_string = st.secrets["gcp_credentials"]
-        creds_json = json.loads(creds_json_string)
-        creds = ServiceAccountCredentials.from_json(creds_json)
-        
-        # Define los permisos (scope) y autoriza el cliente de gspread
-        scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-        client = gspread.authorize(creds.create_delegated(scope))
+        # Lee el secreto como un string y lo convierte a un diccionario de Python
+        creds_dict_string = st.secrets["gcp_credentials"]
+        creds_dict = json.loads(creds_dict_string)
+
+        # Autenticación con el diccionario de credenciales
+        gc = gspread.service_account_from_dict(creds_dict)
         
         # Abre la hoja de cálculo por su ID y nombre de la hoja
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
-        sheet = client.open_by_key(sheet_id).worksheet("Hoja 1")
+        sheet = gc.open_by_key(sheet_id).worksheet("Hoja 1")
         
         # Agrega una nueva fila con los datos de la encuesta
         sheet.append_row(data)
