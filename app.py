@@ -63,10 +63,9 @@ opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 # --- Función para guardar los datos en Google Sheets de forma segura ---
 def save_to_gsheet(data):
     try:
-        # Lee el secreto como un string y lo convierte a un diccionario de Python
-        creds_dict_string = st.secrets["gcp_credentials"]
-        creds_dict = json.loads(creds_dict_string)
-
+        # Lee el secreto de Streamlit, que ya es un diccionario
+        creds_dict = st.secrets["gcp_service_account"]
+        
         # Autenticación con el diccionario de credenciales
         gc = gspread.service_account_from_dict(creds_dict)
         
