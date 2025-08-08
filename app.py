@@ -29,7 +29,7 @@ try:
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
 
-st.title("🛡️ Encuesta sobre Seguridad para Comercios en Pavas")
+st.title("Encuesta sobre Seguridad para Comercios en Pavas")
 st.markdown(
     """
     <div style="text-align: justify;">
