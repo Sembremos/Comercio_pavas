@@ -25,7 +25,6 @@ div.st-emotion-cache-1ft84e1 p {
 
 # --- Encabezado de imagen y texto justificado ---
 try:
-    # Asegúrate de que el archivo 'logo_pavas.png' esté en tu repositorio de GitHub
     st.image("logo_pavas.png", width=700)
 except FileNotFoundError:
     st.warning("Advertencia: El archivo 'logo_pavas.png' no se encontró. Asegúrate de que está en la misma carpeta que 'app.py'.")
@@ -55,25 +54,20 @@ opciones_escala_seguridad = {
     4: "4 - Seguro", 5: "5 - Muy Seguro"
 }
 opciones_frecuencia_patrullas = ["Varias veces al día", "Una vez al día",
-                                "Algunas veces por semana", "Casi nunca"]
+                                 "Algunas veces por semana", "Casi nunca"]
 opciones_calificacion_respuesta = ["Excelente", "Bueno", "Regular", "Malo",
-                                   "Nunca han llegado", "No he necesitado de la Fuerza Pública"]
+                                     "Nunca han llegado", "No he necesitado de la Fuerza Pública"]
 opciones_presencia_policial = ["Sí", "No", "Parcialmente"]
 
 # --- Función para guardar los datos en Google Sheets de forma segura ---
 def save_to_gsheet(data):
     try:
-        # Lee el secreto de Streamlit, que ya es un diccionario
         creds_dict = st.secrets["gcp_service_account"]
-        
-        # Autenticación con el diccionario de credenciales
         gc = gspread.service_account_from_dict(creds_dict)
         
-        # Abre la hoja de cálculo por su ID y nombre de la hoja
         sheet_id = "1HtNM0amp35MF2jrxXLdClhFrABpfC_ofaT00Am2lJK8"
         sheet = gc.open_by_key(sheet_id).worksheet("Hoja 1")
         
-        # Agrega una nueva fila con los datos de la encuesta
         sheet.append_row(data)
         
         return True
@@ -101,36 +95,38 @@ with st.form("encuesta_seguridad"):
         st.markdown("---")
         victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True, key="q4_victima_asalto")
         
+        # Estas preguntas solo aparecen si la respuesta a la pregunta 4 es "Sí"
         movilizacion, uso_armas, tipo_arma, hora_asalto, principales_robado, otras_pertenencias, denuncia, razon_no_denuncia = [None] * 8
         if victima_asalto == "Sí":
             st.markdown("5. Si fue víctima de un asalto, por favor describa el más reciente:")
-            movilizacion = st.radio("  - ¿Cómo se movilizaban los delincuentes?", options=opciones_movilizacion, horizontal=True, key="q5_movilizacion")
-            uso_armas = st.radio("  - ¿Usaron armas?", options=opciones_si_no, horizontal=True, key="q5_uso_armas")
+            movilizacion = st.radio(" - ¿Cómo se movilizaban los delincuentes?", options=opciones_movilizacion, horizontal=True, key="q5_movilizacion")
+            uso_armas = st.radio(" - ¿Usaron armas?", options=opciones_si_no, horizontal=True, key="q5_uso_armas")
             tipo_arma = ""
             if uso_armas == "Sí":
-                tipo_arma = st.text_input("  - ¿Qué tipo de arma?", key="q5_tipo_arma")
+                tipo_arma = st.text_input(" - ¿Qué tipo de arma?", key="q5_tipo_arma")
             
-            hora_asalto = st.text_input("  - ¿A qué hora aproximada ocurrió? (Ej: 14:30)", key="q5_hora_asalto")
-            principales_robado = st.radio("  - ¿Qué se robaron principalmente?", options=opciones_principalmente_robado, horizontal=True, key="q5_principalmente_robado")
+            hora_asalto = st.text_input(" - ¿A qué hora aproximada ocurrió? (Ej: 14:30)", key="q5_hora_asalto")
+            principales_robado = st.radio(" - ¿Qué se robaron principalmente?", options=opciones_principalmente_robado, horizontal=True, key="q5_principalmente_robado")
             otras_pertenencias = ""
             if principales_robado == "Otras pertenencias de clientes":
-                otras_pertenencias = st.text_input("  - Por favor, especifique qué otras pertenencias:", key="q5_otras_pertenencias")
+                otras_pertenencias = st.text_input(" - Por favor, especifique qué otras pertenencias:", key="q5_otras_pertenencias")
             
             denuncia = st.radio("6. ¿Presentó la denuncia?", options=opciones_si_no, horizontal=True, key="q6_denuncia")
             razon_no_denuncia = ""
             if denuncia == "No":
-                razon_no_denuncia = st.text_area("  - ¿Por qué no presentó la denuncia?", key="q6_razon_no_denuncia")
+                razon_no_denuncia = st.text_area(" - ¿Por qué no presentó la denuncia?", key="q6_razon_no_denuncia")
                 
         robo_vehiculos = st.radio("7. ¿Han robado vehículos o artículos DENTRO de vehículos (tacha) de clientes o empleados en el área cercana a su negocio?", options=opciones_si_no, horizontal=True, key="q7_robo_vehiculos")
         
+        # Estas preguntas solo aparecen si la respuesta a la pregunta 7 es "Sí"
         tipo_robo_vehiculo, facilita_robos = None, None
         if robo_vehiculos == "Sí":
             st.markdown("8. Sobre el robo a vehículos:")
-            tipo_robo_vehiculo = st.radio("  - ¿Fue principalmente robo de todo el vehículo o tacha?", options=opciones_tipo_robo_vehiculo, horizontal=True, key="q8_tipo_robo_vehiculo")
-            facilita_robos = st.text_area("  - ¿Qué cree que facilita estos robos en la zona? (Ej: Poca luz, calles solas, etc.)", key="q8_facilita_robos")
-
+            tipo_robo_vehiculo = st.radio(" - ¿Fue principalmente robo de todo el vehículo o tacha?", options=opciones_tipo_robo_vehiculo, horizontal=True, key="q8_tipo_robo_vehiculo")
+            facilita_robos = st.text_area(" - ¿Qué cree que facilita estos robos en la zona? (Ej: Poca luz, calles solas, etc.)", key="q8_facilita_robos")
+        
+        # Esta pregunta ya no depende de la respuesta anterior y siempre se muestra
         problematica_extra = st.text_area("9. ¿Existe alguna otra problemática o delito que esté afectando a su comercio o clientes?", key="q9_problematica_extra")
-
 
     # Sección 3: Percepción y Relación con Fuerza Pública
     with st.expander("Sección 3: Percepción y Relación con Fuerza Pública"):
@@ -139,7 +135,12 @@ with st.form("encuesta_seguridad"):
         frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True, key="q11_frecuencia_patrullas")
         tiempo_respuesta = st.radio("12. Si ha necesitado a la Fuerza Pública, ¿cómo califica su tiempo de respuesta?", options=opciones_calificacion_respuesta, horizontal=True, key="q12_tiempo_respuesta")
         presencia_previene = st.radio("13. ¿Siente que la presencia policial actual logra prevenir el delito en esta área?", options=opciones_presencia_policial, horizontal=True, key="q13_presencia_previene")
-        razon_parcial = st.text_area("  - ¿Por qué siente que la presencia es solo parcial o no del todo efectiva?", key="q13_razon_parcial")
+        
+        # El cuadro de texto para la pregunta 13 solo aparece si la respuesta es "Parcialmente"
+        razon_parcial = ""
+        if presencia_previene == "Parcialmente":
+            razon_parcial = st.text_area(" - ¿Por qué siente que la presencia es solo parcial o no del todo efectiva?", key="q13_razon_parcial")
+        
         sugerencias = st.text_area("14. Si tuviera alguna sugerencia para la Fuerza Pública, ¿cuál sería?", key="q14_sugerencias")
 
     # Botón de envío
