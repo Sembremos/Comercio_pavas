@@ -139,10 +139,7 @@ with st.form("encuesta_seguridad"):
         frecuencia_patrullas = st.radio("11. ¿Con qué frecuencia ve patrullas de Fuerza Pública en su calle?", options=opciones_frecuencia_patrullas, horizontal=True, key="q11_frecuencia_patrullas")
         tiempo_respuesta = st.radio("12. Si ha necesitado a la Fuerza Pública, ¿cómo califica su tiempo de respuesta?", options=opciones_calificacion_respuesta, horizontal=True, key="q12_tiempo_respuesta")
         presencia_previene = st.radio("13. ¿Siente que la presencia policial actual logra prevenir el delito en esta área?", options=opciones_presencia_policial, horizontal=True, key="q13_presencia_previene")
-        razon_parcial = ""
-        if presencia_previene == "Parcialmente":
-            razon_parcial = st.text_area("  - ¿Por qué siente que la presencia es solo parcial o no del todo efectiva?", key="q13_razon_parcial")
-
+        razon_parcial = st.text_area("  - ¿Por qué siente que la presencia es solo parcial o no del todo efectiva?", key="q13_razon_parcial")
         sugerencias = st.text_area("14. Si tuviera alguna sugerencia para la Fuerza Pública, ¿cuál sería?", key="q14_sugerencias")
 
     # Botón de envío
