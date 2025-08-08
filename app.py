@@ -95,7 +95,6 @@ with st.form("encuesta_seguridad"):
         st.markdown("---")
         victima_asalto = st.radio("4. ¿Ha sido usted o algún empleado víctima de un ASALTO en el local o sus inmediaciones?", options=opciones_si_no, horizontal=True, key="q4_victima_asalto")
         
-        # Estas preguntas solo aparecen si la respuesta a la pregunta 4 es "Sí"
         movilizacion, uso_armas, tipo_arma, hora_asalto, principales_robado, otras_pertenencias, denuncia, razon_no_denuncia = [None] * 8
         if victima_asalto == "Sí":
             st.markdown("5. Si fue víctima de un asalto, por favor describa el más reciente:")
@@ -118,14 +117,12 @@ with st.form("encuesta_seguridad"):
                 
         robo_vehiculos = st.radio("7. ¿Han robado vehículos o artículos DENTRO de vehículos (tacha) de clientes o empleados en el área cercana a su negocio?", options=opciones_si_no, horizontal=True, key="q7_robo_vehiculos")
         
-        # Estas preguntas solo aparecen si la respuesta a la pregunta 7 es "Sí"
         tipo_robo_vehiculo, facilita_robos = None, None
         if robo_vehiculos == "Sí":
             st.markdown("8. Sobre el robo a vehículos:")
             tipo_robo_vehiculo = st.radio(" - ¿Fue principalmente robo de todo el vehículo o tacha?", options=opciones_tipo_robo_vehiculo, horizontal=True, key="q8_tipo_robo_vehiculo")
             facilita_robos = st.text_area(" - ¿Qué cree que facilita estos robos en la zona? (Ej: Poca luz, calles solas, etc.)", key="q8_facilita_robos")
         
-        # Esta pregunta ya no depende de la respuesta anterior y siempre se muestra
         problematica_extra = st.text_area("9. ¿Existe alguna otra problemática o delito que esté afectando a su comercio o clientes?", key="q9_problematica_extra")
 
     # Sección 3: Percepción y Relación con Fuerza Pública
@@ -136,11 +133,13 @@ with st.form("encuesta_seguridad"):
         tiempo_respuesta = st.radio("12. Si ha necesitado a la Fuerza Pública, ¿cómo califica su tiempo de respuesta?", options=opciones_calificacion_respuesta, horizontal=True, key="q12_tiempo_respuesta")
         presencia_previene = st.radio("13. ¿Siente que la presencia policial actual logra prevenir el delito en esta área?", options=opciones_presencia_policial, horizontal=True, key="q13_presencia_previene")
         
-        # El cuadro de texto para la pregunta 13 solo aparece si la respuesta es "Parcialmente"
+        # El cuadro de texto para la pregunta 13 ahora es condicional
         razon_parcial = ""
         if presencia_previene == "Parcialmente":
             razon_parcial = st.text_area(" - ¿Por qué siente que la presencia es solo parcial o no del todo efectiva?", key="q13_razon_parcial")
-        
+        elif presencia_previene == "No":
+            razon_parcial = st.text_area(" - ¿Por qué considera que no previene el delito?", key="q13_razon_parcial_no")
+
         sugerencias = st.text_area("14. Si tuviera alguna sugerencia para la Fuerza Pública, ¿cuál sería?", key="q14_sugerencias")
 
     # Botón de envío
